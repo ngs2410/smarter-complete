@@ -4,8 +4,8 @@ Smarter Complete
 Apply machine learning and language processing to create smarter auto complete
 suggestions when programming
 
-Introduction
-------------
+Goals
+-----
 
 This is an experimental project with the following goal(s):
 
@@ -99,12 +99,13 @@ able to identify and take advantage of without language specific training. For
 example, after examining a large body of code, the ML system should know that
 require statements often come at the top of most node.js files, that async and
 underscore are popular libraries, that typing "var _ " is extremely likely to
-be followed by " = requrie('underscore')", that if we have an anoynmous
+be followed by " = require('underscore')", that if we have an anoynmous
 function at the end of our async.auto the first line is very likely to be
 passing errors back up the callback chain, etc.
 
 Having said that, we may follow a different coding style or we may not use
 these libraries but instead use others and the ML system should be able to
-take into account those differences and adapt to be efficient for each user.
+take into account those differences and adapt to be efficient for each
+programmer.
 
 

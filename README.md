@@ -9,8 +9,8 @@ Goals
 
 This is an experimental project with the following goal(s):
 
-1. To determine whether machine learning and language processing techniques can
-be used to improve programmer efficiency by automatically identifying
+1. To determine whether machine learning and language processing techniques
+can be used to improve programmer efficiency by automatically identifying
 frequently repeated code snippets from a large body of code and
 (intelligently) proposing those snippets in typical auto-complete situations.
 2. There's only one goal right now.
@@ -19,11 +19,12 @@ Target
 ------
 
 The initial target editor is Sublime Text. Sublime Text is a popular editor
-that exposes hooks into the auto-complete mechanism. Those hooks are easiest
-to implement in Python. The target language for auto-completion is Javascript.
-Javascript has been selected as it is a popular language, syntactically
-relatively simple but (to the author at least) verbose, repetitive and ripe
-for rich auto-complete suggestions.
+that exposes hooks into the auto-complete mechanism and supports statically
+defined code snippets. Those hooks are easiest to implement in Python. The
+target language for auto-completion is Javascript. Javascript has been
+selected as it is a popular language, syntactically relatively simple but (to
+the author at least) verbose, repetitive and ripe for rich auto-complete
+suggestions.
 
 Motivation
 ----------
@@ -35,7 +36,7 @@ programming is wasteful and inefficient. The mind's ability to imagine the
 solution to a programming problem or write the next line is probably only
 0.5-0.1% of the time it takes to actually transcribe, correct and test the
 code. This only gets worse as programmers have to work with more complex
-systems, reference documentation more frequently etc.
+systems, multiple languages, reference documentation more frequently etc.
 
 2. Recently, the author crafted a very large body of Javascript code in a
 node.js based RESTful API. While modern frameworks allow for a much higher
@@ -44,8 +45,8 @@ reminiscient of programming BASIC on a Commodore PET in 1979. Depressing.
 
 3. While this is not true for all programmers, a couple of friends have
 identified that a lot of "average" programming these days involves simply
-copying and pasting code from one place to another, adjusting some variables
-and moving on. Similarly depressing.
+copying and pasting code from one place (another file or Stack Overflow) to
+another, adjusting some variables and moving on. Similarly depressing.
 
 4. I was looking for a project to try out some new (to me) technologies.
 
@@ -104,7 +105,8 @@ the benefit of the doubt and assume we can enter it perfectly correctly,
 beginning to end, in one go.
 
 Of course, in all programming there are idioms that machine learning should be
-able to identify and take advantage of without language specific training. For
+able to identify and take advantage of without having to be given a (human
+composed) enumeration of language specific rules. For
 example, after examining a large body of code, the ML system should know that
 require statements often come at the top of most node.js files, that async and
 underscore are popular libraries, that typing "var _ " is extremely likely to
@@ -146,3 +148,28 @@ identifiers within modules or blocks are limited to those modules and blocks.
 The ML system needs to be able to understand the difference between
 "async.auto" and "firstCallback" in our target code.
 
+Features
+--------
+
+Given the experimental nature of this project, let's experiment with some
+features that we believe will lead to the ML system being able to predict the
+code snippet that will follow:
+
+- Language
+- Bag of words filename
+- Bag of words enclosing function (if any)
+- Bag of words identifiers in scope
+- Line number, counting from start & counting from end
+- Indent level of the line
+- Column of the insert point
+- Distance through the file, i.e. line number / total number of lines
+- Enclosing context, i.e. the AST we are contained within
+- Adjacent context, i.e. the AST preceding and following us in a block
+- The auto-complete prefix, i.e. the user typed 'as'
+- The tokens preceding the insert point
+
+Testing
+-------
+
+Prerequisites
+-------------

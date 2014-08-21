@@ -74,7 +74,7 @@ Target.prototype.fibonacci = function(n, cb) {
 	self.invocations++;
 
 	if (n < 1 || n > 100) return cb(new Error('Number out of range'));
-	if (n === 1 || n === 2) return 1;
+	if (n === 1 || n === 2) return cb(null, 1);
 
 	async.auto({
 		first : function (firstCallback) {
@@ -88,9 +88,18 @@ Target.prototype.fibonacci = function(n, cb) {
 		cb(null, r.first + r.second);
 	});
 };
+
+var t = new Target(), n = 10;
+t.fibonacci(n, function (err, r) {
+	if (err) {
+		console.log('Error', err);
+	} else {
+		console.log('Fibonnaci of', n, '=', r);
+	}
+});
 ```
 
-That's ~585 bytes which we can assume is 585 keypresses if we give ourselves
+That's ~761 bytes which we can assume is 761 keypresses if we give ourselves
 the benefit of the doubt and assume we can enter it perfectly correctly,
 beginning to end, in one go.
 
@@ -108,4 +117,32 @@ these libraries but instead use others and the ML system should be able to
 take into account those differences and adapt to be efficient for each
 programmer.
 
+Training
+--------
+
+There is a very large body of open source node.js oriented Javascript code
+available through npm (https://www.npmjs.org/). The ML component can be
+trained using this code. At first glance, the code can be broken down into two
+(overlapping) learning problems, (i) structure, and (ii) identifiers.
+
+The structure of the code is defined by the Abstract Syntax Tree and most
+languages have libraries for parsing Javascript. For Python,
+https://pypi.python.org/pypi/slimit, is one such library whose end goal is
+minifying Javascript but which includes all the component pieces we need.
+slimit can give us the abstract syntax tree, lexed tokens, identifiers and
+pretty print the snippets that we are going to propose in an auto-complete
+situation.
+
+Identifiers reflect on the problem in (at least) two ways:
+
+1. The identifier used to describe a function may, for example, correlate with
+the structure of the function, i.e. all the functions implementing my HTTP GET
+endpoints may have a name beginning with "get*" vs "post*" for the POST
+endpoints and that may inform the structure of the code that follows.
+
+2. Identifiers, obviously, only make sense within their scope. This means that
+identifiers corresponding to libraries have universal value whereas
+identifiers within modules or blocks are limited to those modules and blocks.
+The ML system needs to be able to understand the difference between
+"async.auto" and "firstCallback" in our target code.
 

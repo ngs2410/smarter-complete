@@ -12,7 +12,7 @@ Target.prototype.fibonacci = function(n, cb) {
 	self.invocations++;
 
 	if (n < 1 || n > 100) return cb(new Error('Number out of range'));
-	if (n === 1 || n === 2) return 1;
+	if (n === 1 || n === 2) return cb(null, 1);
 
 	async.auto({
 		first : function (firstCallback) {
@@ -26,3 +26,12 @@ Target.prototype.fibonacci = function(n, cb) {
 		cb(null, r.first + r.second);
 	});
 };
+
+var t = new Target(), n = 10;
+t.fibonacci(n, function (err, r) {
+	if (err) {
+		console.log('Error', err);
+	} else {
+		console.log('Fibonnaci of', n, '=', r);
+	}
+});
